@@ -15,9 +15,12 @@ import { z } from "zod";
 
 const registerSchema = z
   .object({
-    username: z.string().nonempty("Username is required"),
+    username: z
+      .string()
+      .nonempty("Username is required")
+      .regex(/^[a-zA-Z0-9]+$/, "Can only contain letters or digits"),
     email: z.string().optional(),
-    password: z.string().nonempty("Password is required"),
+    password: z.string().nonempty("Password is required").min(6),
     repeatPassword: z.string().nonempty("Repeat password is required"),
   })
   .refine((data) => data.password === data.repeatPassword, {
@@ -41,15 +44,11 @@ export default function RegisterForm() {
       body: JSON.stringify(data),
     });
 
-    const response = await result.json();
-    
     if (result.status == 200) {
       toast.success("Superb! Please log into your brand new account.");
       router.push(routes.login);
-    } else if (result.status == 409 && response.message == "Username") {
-      toast.error("This username is already taken. Please take another one.")
-    } else if (result.status == 409 && response.message == "Email") {
-      toast.error("This email is already taken. Please take another one.")
+    } else if (result.status == 500) {
+      toast.error("This username is already taken. Please take another one.");
     } else {
       generalErrorToast();
     }

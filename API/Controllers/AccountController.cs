@@ -1,35 +1,31 @@
-using System;
-using API.Data;
+using System.Security.Claims;
 using API.DTOs;
 using API.Entities;
 using API.Exceptions;
+using API.Extensions;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(ChatContext context) : BaseApiController
+public class AccountController(UserManager<AppUser> userManager) : BaseApiController
 {
     [HttpGet("user-info")]
     public async Task<ActionResult> GetUserInfo()
     {
-        if (!HttpContext.Request.Cookies.TryGetValue("Username", out var username))
+        if (User.Identity?.IsAuthenticated == false)
         {
             return NoContent();
         }
 
-        foreach (var cookie in HttpContext.Request.Cookies)
-        {
-            Console.WriteLine($"Key: {cookie.Key}, Value: {cookie.Value}");
-        }
-
-
-        var user = await context.Set<AppUser>().Where(u => u.Username == username).FirstOrDefaultAsync()
-            ?? throw new NotFoundException("User not found");
+        var user = await userManager.GetUserByName(User);
 
         return Ok(new
         {
-            user.Username,
+            user.UserName,
             user.Email,
         });
     }
@@ -37,51 +33,52 @@ public class AccountController(ChatContext context) : BaseApiController
     [HttpPost("login")]
     public async Task<ActionResult> Login(LoginDto dto)
     {
-        var user = await context.Set<AppUser>().
-            Where(u => u.Username == dto.User || u.Email == dto.User).FirstOrDefaultAsync();
+        var user = await userManager.FindByNameAsync(dto.User);
 
-        if (user == null || user.Password != dto.Password)
+        if (user == null || !await userManager.CheckPasswordAsync(user, dto.Password))
         {
-            return Unauthorized("Wrong username or password");
+            throw new UnauthorizedException("You are not authorized.");
         }
 
-        HttpContext.Response.Cookies.Append("Username", user.Username, new CookieOptions
+        var claims = new List<Claim>
         {
-            Expires = DateTimeOffset.UtcNow.AddMinutes(30),
-            HttpOnly = true,
-            IsEssential = true,
-        });
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Name, user.UserName!),
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        var authProperties = new AuthenticationProperties
+        {
+            IssuedUtc = DateTime.UtcNow,
+        };
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
 
         return Ok();
+    }
+
+    [Authorize]
+    [HttpGet("logout")]
+    public async Task<ActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return NoContent();
     }
 
     [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterDto dto)
     {
-        var existingUsername = await context.Set<AppUser>().Where(u => u.Username == dto.Username).FirstOrDefaultAsync();
-
-        var existingEmail = await context.Set<AppUser>().Where(u => u.Email == dto.Email).FirstOrDefaultAsync();
-
-        if (existingUsername != null)
-        {
-            throw new ConflictException("Username");
-        }
-
-        if (existingEmail != null)
-        {
-            throw new ConflictException("Email");
-        }
-
         var user = new AppUser
         {
-            Username = dto.Username,
-            Email = dto.Email,
-            Password = dto.Password,
+            UserName = dto.Username,
+            Email = dto.Email
         };
 
-        context.Set<AppUser>().Add(user);
+        var result = await userManager.CreateAsync(user, dto.Password);
 
-        await context.SaveChangesAsync();
+        if (!result.Succeeded) throw new InternalServerErrorException(result.ToString());
 
         return Ok();
     }

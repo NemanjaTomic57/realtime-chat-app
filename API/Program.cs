@@ -1,5 +1,9 @@
 using API.Data;
+using API.Entities;
 using API.Middleware;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -27,6 +31,25 @@ builder.Services.AddCors(options =>
     );
 });
 
+builder.Services.AddIdentityApiEndpoints<AppUser>().AddEntityFrameworkStores<ChatContext>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+});
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+{
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddTransient<IUserValidator<AppUser>, OptionalEmailUserValidator<AppUser>>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -41,6 +64,7 @@ app.UseMiddleware<ExceptionHandler>();
 
 app.UseCors(Cors);
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

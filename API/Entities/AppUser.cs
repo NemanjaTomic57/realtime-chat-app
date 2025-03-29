@@ -1,11 +1,7 @@
-using System;
-using API.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities;
 
-public class AppUser : BaseEntity
+public class AppUser : IdentityUser
 {
-    public required string Username { get; set; }
-    public string? Email { get; set; }
-    public required string Password { get; set; }
 }

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using API.Exceptions;
 
 namespace API.Middleware;
