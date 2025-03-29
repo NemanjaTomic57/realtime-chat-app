@@ -15,6 +15,7 @@ A simple real-time chat application using Next.js, .Net Core and websockets for 
 - Entity Framework
 - Identity
 - SignalR
+- SQLite
 - Next.js
 - Postfix
 - Dovecot

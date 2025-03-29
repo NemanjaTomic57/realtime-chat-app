@@ -1,11 +1,16 @@
 "use client";
 
+import { apiUrl } from "@/environment";
+import { routes } from "@/routes";
+import { generalErrorToast } from "@/shared/libs/toasts";
 import Button from "@/shared/ui/button";
 import InputEmail from "@/shared/ui/inputEmail";
 import InputPassword from "@/shared/ui/inputPassword";
 import InputText from "@/shared/ui/inputText";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 
 const registerSchema = z
@@ -23,11 +28,31 @@ const registerSchema = z
 type RegisterFields = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
+  const router = useRouter();
   const methods = useForm<RegisterFields>({ resolver: zodResolver(registerSchema) });
   const { handleSubmit } = methods;
 
-  const onSubmit: SubmitHandler<RegisterFields> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<RegisterFields> = async (data) => {
+    const result = await fetch(apiUrl + "account/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const response = await result.json();
+    
+    if (result.status == 200) {
+      toast.success("Superb! Please log into your brand new account.");
+      router.push(routes.login);
+    } else if (result.status == 409 && response.message == "Username") {
+      toast.error("This username is already taken. Please take another one.")
+    } else if (result.status == 409 && response.message == "Email") {
+      toast.error("This email is already taken. Please take another one.")
+    } else {
+      generalErrorToast();
+    }
   };
 
   return (
