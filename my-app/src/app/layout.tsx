@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${roboto.className} antialiased min-h-full`}
+        className={`${roboto.className} antialiased`}
       >
         {children}
 

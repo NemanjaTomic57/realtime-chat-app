@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Exceptions;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
@@ -22,6 +24,10 @@ public class AccountController(UserManager<AppUser> userManager) : BaseApiContro
         }
 
         var user = await userManager.GetUserByName(User);
+
+        user.LastSeen = DateTime.UtcNow;
+
+        await userManager.UpdateAsync(user);
 
         return Ok(new
         {
@@ -73,7 +79,7 @@ public class AccountController(UserManager<AppUser> userManager) : BaseApiContro
         var user = new AppUser
         {
             UserName = dto.Username,
-            Email = dto.Email
+            Email = dto.Email,
         };
 
         var result = await userManager.CreateAsync(user, dto.Password);

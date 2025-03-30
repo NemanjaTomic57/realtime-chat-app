@@ -1,10 +1,14 @@
 @import "tailwindcss";
 
 :root {
+  --primary: #00142e;
+  --primary-tint: #001b3f;
+  --primary-shade: #000c1b;
   --blue: #2763e4;
   --green: #238636;
   --green-tint: #24923a;
-  --border: #313840;
+  --border: #003c81;
+  --tint: #6d7f96;
   --tone: #151b23;
   --background: #0d1117;
   --foreground: #ededed;
@@ -12,10 +16,14 @@
 }
 
 @theme inline {
+  --color-primary: var(--primary);
+  --color-primary-tint: var(--primary-tint);
+  --color-primary-shade: var(--primary-shade);
   --color-blue: var(--blue);
   --color-green: var(--green);
   --color-green-tint: var(--green-tint);
   --color-border: var(--border);
+  --color-tint: var(--tint);
   --color-tone: var(--tone);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -28,6 +36,12 @@ body {
 }
 
 /* GENERAL */
+.container {
+  max-width: 1400px;
+  margin: auto;
+  padding: 40px;
+}
+
 .container-center {
   position: absolute;
   inset: 0;
@@ -52,15 +66,20 @@ a:hover {
   cursor: pointer;
 }
 
-.fill {
+.btn-fill {
   background-color: var(--green);
 }
 
-.fill:hover {
+.btn-fill:hover {
   background-color: var(--green-tint);
 }
 
-.sm {
+.btn-sm {
+  @apply rounded-sm;
+}
+
+.btn-md {
+  padding: 4px 12px;
   @apply rounded-sm;
 }
 

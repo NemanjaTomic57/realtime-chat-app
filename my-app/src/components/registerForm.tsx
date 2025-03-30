@@ -65,7 +65,7 @@ export default function RegisterForm() {
         <InputEmail inputName="email" label="E-Mail (optional)" background="bg-background" questionTooltip />
         <InputPassword inputName="password" label="Password" className="mb-2" background="bg-background" />
         <InputPassword inputName="repeatPassword" label="Repeat password" className="mb-2" background="bg-background" />
-        <Button type="submit" className="fill h-[32px] sm">
+        <Button type="submit" className="btn-fill h-[32px] btn-sm">
           Continue
         </Button>
       </form>

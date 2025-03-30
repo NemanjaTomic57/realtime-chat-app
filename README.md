@@ -1,22 +1,35 @@
 # Real-Time Chat App
 
-A simple real-time chat application using Next.js, .Net Core and websockets for real-time updates.
+A simple real-time chat application built with Next.js, .NET Core, and WebSockets (SignalR) for instant real-time messaging.
 
 # How it works
 
-1. Create an account.
-2. Open your contacts.
-3. Write and receive messages.
-4. Add an email to your account for email notifications.
+1. Create an account — Quick registration using a username and password.
+2. Open your contacts — Easily view and manage your contact list.
+3. Chat in real-time — Send and receive messages instantly.
 
 # Features
 
-- .Net Core 9
-- Entity Framework
-- Identity
+- Easy registration with username and password
+- Real-time chat with SignalR
+- Persistent login sessions
+- Optional email notifications via SMTP
+- Upload and display a profile picture
+- "Last seen" online status
+
+# Technologies
+
+## Backend
+- .NET Core 9
+- Entity Framework Core
+- ASP.NET Core Identity
 - SignalR
 - SQLite
-- Next.js
+
+## Frontend
+- Next.js (React)
+
+## Email/Notifications
 - Postfix
 - Dovecot
-- TLS
+- TLS for secure communication

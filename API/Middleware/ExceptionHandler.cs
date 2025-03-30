@@ -25,7 +25,7 @@ public class ExceptionHandler(RequestDelegate next)
         {
             // BadRequestException => StatusCodes.Status400BadRequest,
 
-            // UnauthorizedException => StatusCodes.Status401Unauthorized,
+            UnauthorizedException => StatusCodes.Status401Unauthorized,
 
             NotFoundException => StatusCodes.Status404NotFound,
 

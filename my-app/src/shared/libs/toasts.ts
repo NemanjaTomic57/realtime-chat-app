@@ -1,5 +1,5 @@
 import toast from "react-hot-toast"
 
 export const generalErrorToast = () => {
-    return toast.loading("Something unexpected happened. Please try again.")
+    return toast.error("Something unexpected happened. Please try again.")
 }
