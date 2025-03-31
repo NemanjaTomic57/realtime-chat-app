@@ -10,5 +10,5 @@ public class Message
     public int ChatRoomId { get; set; }
     public required ChatRoom ChatRoom { get; set; }
     public required string Text { get; set; }
-    public DateTimeOffset Timestamp { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset TimeStamp { get; set; } = DateTimeOffset.UtcNow;
 }

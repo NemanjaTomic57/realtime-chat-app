@@ -14,6 +14,22 @@ namespace API.Controllers;
 
 public class AccountController(UserManager<AppUser> userManager) : BaseApiController
 {
+    [HttpPost("register")]
+    public async Task<ActionResult> Register(RegisterDto dto)
+    {
+        var user = new AppUser
+        {
+            UserName = dto.Username,
+            Email = dto.Email,
+        };
+
+        var result = await userManager.CreateAsync(user, dto.Password);
+
+        if (!result.Succeeded) throw new InternalServerErrorException(result.ToString());
+
+        return Ok();
+    }
+
     [HttpGet("user-info")]
     public async Task<ActionResult> GetUserInfo()
     {
@@ -72,18 +88,16 @@ public class AccountController(UserManager<AppUser> userManager) : BaseApiContro
         return NoContent();
     }
 
-    [HttpPost("register")]
-    public async Task<ActionResult> Register(RegisterDto dto)
+    [Authorize]
+    [HttpPost("email")]
+    public async Task<ActionResult> UpdateEmail(EmailDto dto)
     {
-        var user = new AppUser
-        {
-            UserName = dto.Username,
-            Email = dto.Email,
-        };
+        var user = await userManager.GetUserByName(User);
 
-        var result = await userManager.CreateAsync(user, dto.Password);
+        var result = await userManager.SetEmailAsync(user, dto.Email);
 
-        if (!result.Succeeded) throw new InternalServerErrorException(result.ToString());
+        if (!result.Succeeded)
+            throw new InternalServerErrorException();
 
         return Ok();
     }

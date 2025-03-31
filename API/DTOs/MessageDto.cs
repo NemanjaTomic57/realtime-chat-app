@@ -13,5 +13,5 @@ public class MessageDto
     [Required]
     public string Text { get; set; } = string.Empty;
 
-    public string Timestamp { get; set; } = string.Empty;
+    public string TimeStamp { get; set; } = string.Empty;
 }

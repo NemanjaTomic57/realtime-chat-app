@@ -5,6 +5,7 @@ import Type from "@/shared/ui/type";
 import { useChatRoomContext } from "@/shared/context/useChatRoomContext";
 import clsx from "clsx";
 import Icon from "@/shared/ui/icon";
+import { dateTime, dateTimeMessageSent } from "@/shared/libs/dateTimeConverter";
 
 interface Props {
   userName: string;
@@ -40,10 +41,11 @@ export default function ChatRooms({ userName, children }: Props) {
                 )}
               >
                 {last ? (
-                  <Type type="sm" className="truncate whitespace-nowrap w-full flex items-center gap-2">
-                    {isSender(last) && <Icon name="doubleCheck" />}
-                    {last.text}
-                  </Type>
+                  <div className="w-full flex items-center justify-between gap-2">
+                    {isSender(last) && <Icon name="doubleCheck" size="sm" />}
+                    <Type type="sm" className="truncate whitespace-nowrap w-full">{last.text}</Type>
+                    <Type type="sm" className="ml-auto">{dateTimeMessageSent(last.timeStamp!)}</Type>
+                  </div>
                 ) : (
                   <Type type="smGrey" className="truncate whitespace-nowrap w-full block">
                     Be the first to write a message!

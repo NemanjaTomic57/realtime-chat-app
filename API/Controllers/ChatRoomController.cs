@@ -21,8 +21,10 @@ public class ChatRoomController(UserManager<AppUser> userManager, ChatContext co
 
         if (user1 == null || user2 == null) throw new InternalServerErrorException();
 
+        var usernames = new[] { user1.UserName, user2.UserName };
+
         var existingChatRoom = await context.Set<ChatRoom>()
-            .FirstOrDefaultAsync(c => c.AppUsers.Any(a => a.UserName == dto.Username));
+            .FirstOrDefaultAsync(c => c.AppUsers.All(a => usernames.Contains(a.UserName)));
 
         if (existingChatRoom != null)
             throw new ConflictException("Chat room already exists");
@@ -55,7 +57,7 @@ public class ChatRoomController(UserManager<AppUser> userManager, ChatContext co
             .ToListAsync();
 
         if (chatRooms.Count == 0)
-            return Ok();
+            return NoContent();
 
         var dtos = chatRooms.Select(room =>
         {
@@ -63,13 +65,13 @@ public class ChatRoomController(UserManager<AppUser> userManager, ChatContext co
                 ?? throw new NotFoundException("Chat room has no other participants");
 
             var messageDtos = room.Messages
-                .OrderBy(m => m.Timestamp)
+                .OrderBy(m => m.TimeStamp)
                 .Select(message => new MessageDto
                 {
                     ChatRoomId = room.Id,
                     UserName = message.AppUser.UserName!,
                     Text = message.Text,
-                    Timestamp = message.Timestamp.ToString(),
+                    TimeStamp = message.TimeStamp.ToString(),
                 }).ToList();
 
             return new ChatRoomDto

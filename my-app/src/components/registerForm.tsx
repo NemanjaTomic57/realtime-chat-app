@@ -19,7 +19,7 @@ const registerSchema = z
       .string()
       .nonempty("Username is required")
       .regex(/^[a-zA-Z0-9]+$/, "Can only contain letters or digits"),
-    email: z.string().optional(),
+    email: z.string().regex(/^$|^[\w\.-]+@[\w\.-]+\.\w{2,}$/, "Invalid email"),
     password: z.string().nonempty("Password is required").min(6),
     repeatPassword: z.string().nonempty("Repeat password is required"),
   })

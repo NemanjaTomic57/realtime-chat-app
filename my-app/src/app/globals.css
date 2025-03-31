@@ -62,24 +62,30 @@ a:hover {
 }
 
 /* BUTTONS */
-.button {
+.button:hover {
   cursor: pointer;
 }
 
 .btn__chat-header {
-  background-color: var(--primary-light);
+  border: 2px solid var(--primary-light);
   padding: 8px 20px;
   height: fit-content;
   @apply rounded-sm;
 }
 
 .btn__chat-header:hover {
-  background-color: var(--primary-light-shade);
+  background-color: var(--primary-light);
 }
 
 .btn__green {
   background-color: rgb(15, 126, 15);
   @apply rounded-sm;
+}
+
+.button:disabled {
+  cursor: initial;
+  background-color: #cccccc;
+  color: #666666;
 }
 
 /* INPUT FIELDS */
@@ -93,7 +99,7 @@ a:hover {
 }
 
 .input-label {
-  display: block;
+  display: inline-block;
   margin-bottom: 6px;
 }
 

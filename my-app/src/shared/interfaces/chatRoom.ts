@@ -10,5 +10,5 @@ interface Message {
     chatRoomId: number,
     userName?: string,
     text: string,
-    timeStamp?: string,
+    timeStamp?: Date,
 }

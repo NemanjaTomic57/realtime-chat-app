@@ -2,6 +2,7 @@
 
 import { sendMessage } from "@/services/messageService";
 import { useChatRoomContext } from "@/shared/context/useChatRoomContext";
+import { dateOnly, dateTime, timeOnly } from "@/shared/libs/dateTimeConverter";
 import Icon from "@/shared/ui/icon";
 import Type from "@/shared/ui/type";
 import clsx from "clsx";
@@ -52,17 +53,32 @@ export default function Messenger({ currentUser }: Props) {
 
       <div className="bg-primary-tint overflow-scroll p-4">
         <div className="grid gap-1.5">
-          {currentChatRoom?.messages.map((message, index) => (
-            <p
-              key={index}
-              className={clsx(
-                "bg-primary-light py-1 px-4 rounded-lg w-[500px]",
-                isSender(message.userName!) && "text-right ml-auto"
-              )}
-            >
-              {message.text}
-            </p>
-          ))}
+          {currentChatRoom?.messages.map((message, index) => {
+            const lastDate = dateOnly(currentChatRoom.messages[index - 1]?.timeStamp || "");
+            return (
+              <div key={index} className="grid gap-1.5">
+                {lastDate != dateOnly(message.timeStamp!) && (
+                  <p className="bg-primary border-1 border-border py-1 px-4 rounded-lg m-auto">
+                    {dateOnly(message.timeStamp!)}
+                  </p>
+                )}
+
+                <div
+                  className={clsx(
+                    "bg-primary-light py-1 px-4 rounded-lg w-[500px]",
+                    isSender(message.userName!) && "text-right ml-auto"
+                  )}
+                >
+                  <p>{message.text}</p>
+                  <Type type="xsGrey">{timeOnly(message.timeStamp!)}</Type>
+                </div>
+              </div>
+            );
+          })}
+
+          {currentChatRoom?.messages.length === 0 && (
+            <p className="bg-primary border-1 border-border py-1 px-4 rounded-lg m-auto">No messages yet</p>
+          )}
         </div>
         <div ref={bottomRef} />
       </div>
@@ -77,7 +93,7 @@ export default function Messenger({ currentUser }: Props) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message"
-            className="w-full bg-primary-shade border-1 border-border p-2 rounded-lg"
+            className="w-full bg-primary-shade input py-2!"
           />
         </form>
       </div>

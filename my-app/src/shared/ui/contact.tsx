@@ -19,7 +19,7 @@ export default function Contact({ userName, onClick, className, children }: Prop
         className="rounded-full"
         alt="Profile Picture"
       />
-      <div className="overflow-hidden">
+      <div className="overflow-hidden w-full">
       <Type type="lgBold">{userName}</Type>
       {children}
       </div>

@@ -12,6 +12,7 @@ import { redirect } from "next/navigation";
 import ChatRooms from "@/components/chatRooms";
 import { getChatRooms } from "@/services/chatRoomService";
 import ChatRoomProvider from "@/shared/context/chatRoomsProvider";
+import Settings from "@/components/settings";
 
 export default async function Home() {
   const cookie = await getAllCookies();
@@ -31,7 +32,7 @@ export default async function Home() {
 
           <div className="grid grid-cols-3 ml-auto items-center gap-4">
             <ContactBook contacts={contacts} className="btn__chat-header" />
-            <Button className="btn__chat-header">Settings</Button>
+            <Settings user={user} className="btn__chat-header" />
             <LogoutButton />
           </div>
         </div>
