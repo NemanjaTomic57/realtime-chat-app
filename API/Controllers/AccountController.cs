@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
@@ -25,7 +24,7 @@ public class AccountController(UserManager<AppUser> userManager) : BaseApiContro
 
         var user = await userManager.GetUserByName(User);
 
-        user.LastSeen = DateTime.UtcNow;
+        user.LastSeen = DateTimeOffset.UtcNow;
 
         await userManager.UpdateAsync(user);
 

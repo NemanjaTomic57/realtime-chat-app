@@ -15,7 +15,13 @@ public class ChatContext(DbContextOptions<ChatContext> options) : IdentityDbCont
 
         builder.Entity<AppUser>()
             .HasMany(e => e.ChatRooms)
-            .WithMany(e => e.Participants);
+            .WithMany(e => e.AppUsers);
+
+        builder.Entity<AppUser>()
+            .HasMany(e => e.Messages)
+            .WithOne(e => e.AppUser)
+            .HasForeignKey(e => e.AppUserId)
+            .IsRequired();
 
         builder.Entity<ChatRoom>()
             .HasMany(e => e.Messages)

@@ -34,7 +34,7 @@ public class ChatContextSeed
         {
             var user = new AppUser
             {
-                UserName = "Testuser01",
+                UserName = "n",
                 Email = "nemanja.tomic@ik.me",
             };
 

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-export const getApiCookie = async () => {
+export const getAllCookies = async () => {
   const cookieStore = await cookies();
   const cookie = cookieStore.toString();
   return cookie || "";

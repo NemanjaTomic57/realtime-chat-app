@@ -1,29 +1,20 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using API.Entities;
 
 namespace API.DTOs;
 
 public class ChatRoomDto
 {
+    public int Id { get; set; }
+
     [Required]
-    public string Username { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
     
     public string? ProfilePictureUrl { get; set; }
 
     [Required]
-    public DateTime LastSeen { get; set; }
+    public DateTimeOffset LastSeen { get; set; }
 
-    public ICollection<MessageDto>? Messages { get; set; }
-}
-
-public class MessageDto
-{
-    [Required]
-    public string Sender { get; set; } = string.Empty;
-
-    [Required]
-    public string Message { get; set; } = string.Empty;
-
-    [Required]
-    public DateTime TimeStamp { get; set; }
+    public ICollection<MessageDto> Messages { get; set; } = [];
 }

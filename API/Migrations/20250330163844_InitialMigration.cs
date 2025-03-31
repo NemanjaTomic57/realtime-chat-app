@@ -30,7 +30,7 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    LastSeen = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastSeen = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -49,6 +49,18 @@ namespace API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ChatRooms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatRooms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,23 +170,52 @@ namespace API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppUserChatRoom",
+                columns: table => new
+                {
+                    ChatRoomsId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ParticipantsId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppUserChatRoom", x => new { x.ChatRoomsId, x.ParticipantsId });
+                    table.ForeignKey(
+                        name: "FK_AppUserChatRoom_AspNetUsers_ParticipantsId",
+                        column: x => x.ParticipantsId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppUserChatRoom_ChatRooms_ChatRoomsId",
+                        column: x => x.ChatRoomsId,
+                        principalTable: "ChatRooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    AppUserId = table.Column<string>(type: "TEXT", nullable: false)
+                    ChatRoomId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_Messages_ChatRooms_ChatRoomId",
+                        column: x => x.ChatRoomId,
+                        principalTable: "ChatRooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppUserChatRoom_ParticipantsId",
+                table: "AppUserChatRoom",
+                column: "ParticipantsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -214,14 +255,17 @@ namespace API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_AppUserId",
+                name: "IX_Messages_ChatRoomId",
                 table: "Messages",
-                column: "AppUserId");
+                column: "ChatRoomId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AppUserChatRoom");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -245,6 +289,9 @@ namespace API.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "ChatRooms");
         }
     }
 }

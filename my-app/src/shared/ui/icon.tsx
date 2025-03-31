@@ -1,14 +1,18 @@
 import { IconType } from "react-icons";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { AiFillSetting } from "react-icons/ai";
+import { FaCheckDouble } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
+import { MdClose } from "react-icons/md";
 import { RiContactsBook3Fill } from "react-icons/ri";
 
 const icons: { [key: string]: IconType } = {
   question: AiOutlineQuestionCircle,
   contacts: RiContactsBook3Fill,
   settings: AiFillSetting,
-  plus: FiPlus
+  plus: FiPlus,
+  close: MdClose,
+  doubleCheck: FaCheckDouble,
 };
 
 interface Props {

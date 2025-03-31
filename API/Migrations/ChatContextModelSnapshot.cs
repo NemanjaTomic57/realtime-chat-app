@@ -36,7 +36,7 @@ namespace API.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("LastSeen")
+                    b.Property<DateTimeOffset>("LastSeen")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
@@ -101,10 +101,23 @@ namespace API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ChatRoomId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("Timestamp")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.HasIndex("ChatRoomId");
 
@@ -113,15 +126,15 @@ namespace API.Migrations
 
             modelBuilder.Entity("AppUserChatRoom", b =>
                 {
+                    b.Property<string>("AppUsersId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("ChatRoomsId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ParticipantsId")
-                        .HasColumnType("TEXT");
+                    b.HasKey("AppUsersId", "ChatRoomsId");
 
-                    b.HasKey("ChatRoomsId", "ParticipantsId");
-
-                    b.HasIndex("ParticipantsId");
+                    b.HasIndex("ChatRoomsId");
 
                     b.ToTable("AppUserChatRoom");
                 });
@@ -256,26 +269,34 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Entities.Message", b =>
                 {
+                    b.HasOne("API.Entities.AppUser", "AppUser")
+                        .WithMany("Messages")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("API.Entities.ChatRoom", "ChatRoom")
                         .WithMany("Messages")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("AppUser");
+
                     b.Navigation("ChatRoom");
                 });
 
             modelBuilder.Entity("AppUserChatRoom", b =>
                 {
-                    b.HasOne("API.Entities.ChatRoom", null)
+                    b.HasOne("API.Entities.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("ChatRoomsId")
+                        .HasForeignKey("AppUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.AppUser", null)
+                    b.HasOne("API.Entities.ChatRoom", null)
                         .WithMany()
-                        .HasForeignKey("ParticipantsId")
+                        .HasForeignKey("ChatRoomsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -329,6 +350,11 @@ namespace API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("API.Entities.AppUser", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("API.Entities.ChatRoom", b =>

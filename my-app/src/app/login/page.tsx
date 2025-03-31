@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="container-center">
+    <div className="container-center-sm">
       <div className="text-center mb-8">
         <Heading type="h1" className="mb-4">
           My First Real-Time Chat App

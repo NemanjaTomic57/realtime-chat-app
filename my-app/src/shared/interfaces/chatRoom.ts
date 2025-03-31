@@ -1,12 +1,14 @@
 interface ChatRoom {
-    username: string,
+    id: number,
+    userName: string,
+    lastSeen: Date,
     profilePictureUrl: string,
-    lastSeen: string,
     messages: Message[],
 }
 
 interface Message {
-    sender: string,
-    message: string,
-    timeStamp: string,
+    chatRoomId: number,
+    userName?: string,
+    text: string,
+    timeStamp?: string,
 }

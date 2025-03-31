@@ -4,9 +4,9 @@
   --primary: #00142e;
   --primary-tint: #001b3f;
   --primary-shade: #000c1b;
-  --blue: #2763e4;
-  --green: #238636;
-  --green-tint: #24923a;
+  --primary-light: #0347a0;
+  --primary-light-tint: #2379e9;
+  --primary-light-shade: #02387e;
   --border: #003c81;
   --tint: #6d7f96;
   --tone: #151b23;
@@ -19,9 +19,9 @@
   --color-primary: var(--primary);
   --color-primary-tint: var(--primary-tint);
   --color-primary-shade: var(--primary-shade);
-  --color-blue: var(--blue);
-  --color-green: var(--green);
-  --color-green-tint: var(--green-tint);
+  --color-primary-light: var(--primary-light);
+  --color-primary-light-tint: var(--primary-light-tint);
+  --color-primary-light-shade: var(--primary-light-shade);
   --color-border: var(--border);
   --color-tint: var(--tint);
   --color-tone: var(--tone);
@@ -42,7 +42,7 @@ body {
   padding: 40px;
 }
 
-.container-center {
+.container-center-sm {
   position: absolute;
   inset: 0;
   margin: auto;
@@ -54,7 +54,7 @@ body {
 }
 
 a {
-  color: var(--blue);
+  color: var(--primary-light-tint);
 }
 
 a:hover {
@@ -66,20 +66,19 @@ a:hover {
   cursor: pointer;
 }
 
-.btn-fill {
-  background-color: var(--green);
-}
-
-.btn-fill:hover {
-  background-color: var(--green-tint);
-}
-
-.btn-sm {
+.btn__chat-header {
+  background-color: var(--primary-light);
+  padding: 8px 20px;
+  height: fit-content;
   @apply rounded-sm;
 }
 
-.btn-md {
-  padding: 4px 12px;
+.btn__chat-header:hover {
+  background-color: var(--primary-light-shade);
+}
+
+.btn__green {
+  background-color: rgb(15, 126, 15);
   @apply rounded-sm;
 }
 

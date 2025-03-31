@@ -53,7 +53,7 @@ export default function LoginForm() {
       >
         <InputText inputName="user" label="Username or email address" background="bg-background" />
         <InputPassword inputName="password" label="Password" className="mb-2" background="bg-background" />
-        <Button type="submit" className="btn-fill h-[32px] btn-sm">
+        <Button type="submit" className="btn__green h-[32px]">
           Sign in
         </Button>
       </form>
