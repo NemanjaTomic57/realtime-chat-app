@@ -12,10 +12,9 @@ A simple real-time chat application built with Next.js, .NET Core, and WebSocket
 
 - Easy registration with username and password
 - Real-time chat with SignalR
-- Persistent login sessions
-- Optional email notifications via SMTP
-- Upload and display a profile picture
-- "Last seen" online status
+- Persistent login sessions with cookies
+- Optional email notifications opt-in via SMTP
+- Upload and display a profile picture with input sanitization on both backend and frontend
 
 # Technologies
 
@@ -25,9 +24,10 @@ A simple real-time chat application built with Next.js, .NET Core, and WebSocket
 - ASP.NET Core Identity
 - SignalR
 - SQLite
+- Google Cloud Bucket Storage
 
 ## Frontend
-- Next.js (React)
+- React (Next.js)
 
 ## Email/Notifications
 - Postfix

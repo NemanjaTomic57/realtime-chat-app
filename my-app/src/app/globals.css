@@ -62,7 +62,7 @@ a:hover {
 }
 
 /* BUTTONS */
-.button:hover {
+.btn:hover {
   cursor: pointer;
 }
 
@@ -82,7 +82,7 @@ a:hover {
   @apply rounded-sm;
 }
 
-.button:disabled {
+.btn:disabled {
   cursor: initial;
   background-color: #cccccc;
   color: #666666;
@@ -101,6 +101,13 @@ a:hover {
 .input-label {
   display: inline-block;
   margin-bottom: 6px;
+}
+
+#file {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
 }
 
 /* TOOLTIP */

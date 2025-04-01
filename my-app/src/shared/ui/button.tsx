@@ -15,11 +15,11 @@ export default function Button({ onClick, type = "button", disabled, href, class
   return (
     <>
       {href ? (
-        <Link href={href} className={clsx("button", className)}>
+        <Link href={href} className={clsx("btn", className)}>
           {children}
         </Link>
       ) : (
-        <button onClick={onClick} className={clsx("button", className)} type={type} disabled={disabled}>
+        <button onClick={onClick} className={clsx("btn", className)} type={type} disabled={disabled}>
           {children}
         </button>
       )}

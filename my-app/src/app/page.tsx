@@ -5,7 +5,6 @@ import { routes } from "@/routes";
 import { getUserInfo } from "@/services/accountService";
 import { getAllContacts } from "@/services/contactsService";
 import { getAllCookies } from "@/services/cookieService";
-import Button from "@/shared/ui/button";
 import Contact from "@/shared/ui/contact";
 import Heading from "@/shared/ui/heading";
 import { redirect } from "next/navigation";
@@ -41,7 +40,7 @@ export default async function Home() {
         <div className="h-full grid grid-cols-[300px_1fr] bg-tone border-border border-1 rounded-lg overflow-hidden">
           {/* Sidebar */}
           <div className="flex flex-col border-r-1 border-border overflow-scroll bg-primary">
-            <Contact userName={user.userName} className="p-3 bg-primary border-b-1 border-border" />
+            <Contact userName={user.userName} profilePictureUrl={user.profilePictureUrl} className="p-3 bg-primary border-b-1 border-border" />
 
             <ChatRooms userName={user.userName}>
               <ContactBook contacts={contacts} className="btn__chat-header" />

@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using DotNetEnv;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Env.Load();
 
 var Cors = "_cors";
 
@@ -48,6 +51,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<FileService>();
 builder.Services.AddTransient<IUserValidator<AppUser>, OptionalEmailUserValidator<AppUser>>();
 
 var app = builder.Build();

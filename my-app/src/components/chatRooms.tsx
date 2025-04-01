@@ -34,6 +34,7 @@ export default function ChatRooms({ userName, children }: Props) {
               <Contact
                 key={index}
                 userName={room.userName}
+                profilePictureUrl={room.profilePictureUrl}
                 onClick={() => setCurrentChatRoom(room)}
                 className={clsx(
                   "p-3 cursor-pointer",

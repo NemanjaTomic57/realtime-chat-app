@@ -7,4 +7,6 @@ public class EmailDto
 {
     [Required]
     public string Email { get; set; } = string.Empty;
+
+    public string? Token { get; set; }
 }

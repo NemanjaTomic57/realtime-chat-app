@@ -78,6 +78,7 @@ public class ChatRoomController(UserManager<AppUser> userManager, ChatContext co
             {
                 Id = room.Id,
                 UserName = participant.UserName!,
+                ProfilePictureUrl = participant.ProfilePictureUrl,
                 LastSeen = participant.LastSeen,
                 Messages = messageDtos,
             };

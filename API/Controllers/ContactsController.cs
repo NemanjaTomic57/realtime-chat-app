@@ -27,6 +27,7 @@ public class ContactsController(UserManager<AppUser> userManager) : BaseApiContr
         {
             Username = contact.UserName!,
             LastSeen = contact.LastSeen,
+            ProfilePictureUrl = contact.ProfilePictureUrl,
         }));
 
         return Ok(contactsToReturn);

@@ -23,7 +23,7 @@ public class ExceptionHandler(RequestDelegate next)
 
         var statusCode = ex switch
         {
-            // BadRequestException => StatusCodes.Status400BadRequest,
+            BadRequestException => StatusCodes.Status400BadRequest,
 
             UnauthorizedException => StatusCodes.Status401Unauthorized,
 

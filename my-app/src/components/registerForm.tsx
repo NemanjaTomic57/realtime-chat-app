@@ -47,7 +47,7 @@ export default function RegisterForm() {
     if (result.status == 200) {
       toast.success("Superb! Please log into your brand new account.");
       router.push(routes.login);
-    } else if (result.status == 500) {
+    } else if (result.status == 400) {
       toast.error("This username is already taken. Please take another one.");
     } else {
       generalErrorToast();

@@ -53,6 +53,7 @@ export default function ContactBook({ contacts, className }: Props) {
                 <Contact
                   key={index}
                   userName={contact.username}
+                  profilePictureUrl={contact.profilePictureUrl}
                   onClick={() => handleClick(contact)}
                   className="p-2 cursor-pointer hover:bg-primary-light rounded-lg text-left"
                 >

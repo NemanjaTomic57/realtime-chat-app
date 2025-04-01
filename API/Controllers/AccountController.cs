@@ -1,9 +1,12 @@
 using System.Security.Claims;
+using System.Web;
 using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Exceptions;
 using API.Extensions;
+using API.Services;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +15,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-public class AccountController(UserManager<AppUser> userManager) : BaseApiController
+public class AccountController(ChatContext context, UserManager<AppUser> userManager, EmailService emailService, 
+    FileService fileService) : BaseApiController
 {
     [HttpPost("register")]
     public async Task<ActionResult> Register(RegisterDto dto)
     {
+        await emailService.NewRegistration();
+
         var user = new AppUser
         {
             UserName = dto.Username,
@@ -25,7 +31,9 @@ public class AccountController(UserManager<AppUser> userManager) : BaseApiContro
 
         var result = await userManager.CreateAsync(user, dto.Password);
 
-        if (!result.Succeeded) throw new InternalServerErrorException(result.ToString());
+        if (!result.Succeeded) throw new BadRequestException(result.ToString());
+
+        await emailService.SendChangeEmailLink(user);
 
         return Ok();
     }
@@ -48,6 +56,7 @@ public class AccountController(UserManager<AppUser> userManager) : BaseApiContro
         {
             user.UserName,
             user.Email,
+            user.ProfilePictureUrl,
         });
     }
 
@@ -90,14 +99,43 @@ public class AccountController(UserManager<AppUser> userManager) : BaseApiContro
 
     [Authorize]
     [HttpPost("email")]
+    public async Task<ActionResult> SendUpdateEmailLink(EmailDto dto)
+    {
+        var user = await userManager.GetUserByName(User) ?? throw new NotFoundException("User not found");
+
+        user.Email = dto.Email;
+
+        await emailService.SendChangeEmailLink(user);
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("email/confirm")]
     public async Task<ActionResult> UpdateEmail(EmailDto dto)
     {
         var user = await userManager.GetUserByName(User);
 
-        var result = await userManager.SetEmailAsync(user, dto.Email);
+        var result = await userManager.ChangeEmailAsync(user, dto.Email, dto.Token!);
 
         if (!result.Succeeded)
             throw new InternalServerErrorException();
+
+        return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("profile-picture")]
+    public async Task<ActionResult> UpdateProfilePicture(IFormFile profilePicture)
+    {
+        if (profilePicture == null || profilePicture.Length == 0)
+            throw new BadRequestException("No profile picture uploaded");
+
+        var user = await userManager.GetUserByName(User);
+
+        user.ProfilePictureUrl = await fileService.UploadImage(profilePicture);
+
+        await context.SaveChangesAsync();
 
         return Ok();
     }
