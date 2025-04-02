@@ -51,7 +51,6 @@ export const fetchNewChatRooms = async () => {
 
     if (res.status == 200 || res.status == 204) {
         const chatRooms = await res.json();
-        console.log(chatRooms);
         return chatRooms as ChatRoom[] | null;
     } else {
         toast.error("Error when fetching the chat rooms");

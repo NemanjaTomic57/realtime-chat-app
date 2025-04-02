@@ -5,7 +5,7 @@ import Type from "@/shared/ui/type";
 import { useChatRoomContext } from "@/shared/context/useChatRoomContext";
 import clsx from "clsx";
 import Icon from "@/shared/ui/icon";
-import { dateTime, dateTimeMessageSent } from "@/shared/libs/dateTimeConverter";
+import { dateTimeMessageSent } from "@/shared/libs/dateTimeConverter";
 
 interface Props {
   userName: string;
@@ -27,12 +27,12 @@ export default function ChatRooms({ userName, children }: Props) {
     <div className="flex-grow bg-primary-tint">
       {chatRooms != null ? (
         <div>
-          {chatRooms.map((room, index) => {
+          {chatRooms.map((room) => {
             const last = lastMessage(room.messages);
 
             return (
               <Contact
-                key={index}
+                key={room.id}
                 userName={room.userName}
                 profilePictureUrl={room.profilePictureUrl}
                 onClick={() => setCurrentChatRoom(room)}
@@ -44,8 +44,12 @@ export default function ChatRooms({ userName, children }: Props) {
                 {last ? (
                   <div className="w-full flex items-center justify-between gap-2">
                     {isSender(last) && <Icon name="doubleCheck" size="sm" />}
-                    <Type type="sm" className="truncate whitespace-nowrap w-full">{last.text}</Type>
-                    <Type type="sm" className="ml-auto">{dateTimeMessageSent(last.timeStamp!)}</Type>
+                    <Type type="sm" className="truncate whitespace-nowrap w-full">
+                      {last.text}
+                    </Type>
+                    <Type type="sm" className="ml-auto">
+                      {dateTimeMessageSent(last.timeStamp!)}
+                    </Type>
                   </div>
                 ) : (
                   <Type type="smGrey" className="truncate whitespace-nowrap w-full block">

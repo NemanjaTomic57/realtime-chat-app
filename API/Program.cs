@@ -54,6 +54,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<FileService>();
 builder.Services.AddTransient<IUserValidator<AppUser>, OptionalEmailUserValidator<AppUser>>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -63,8 +64,6 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-// app.UseHttpsRedirection();
-
 app.UseMiddleware<ExceptionHandler>();
 
 app.UseCors(Cors);
@@ -73,6 +72,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/hub/chat");
 
 try
 {
@@ -85,7 +85,7 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine(ex);
+    Console.WriteLine("Error when seeding data: " + ex);
     throw;
 }
 

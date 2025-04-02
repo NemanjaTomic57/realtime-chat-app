@@ -1,6 +1,6 @@
 # Real-Time Chat App
 
-A simple real-time chat application built with Next.js, .NET Core, and WebSockets (SignalR) for instant real-time messaging.
+A simple real-time chat application built with Next.js, .NET Core, and SignalR websockets for instant real-time messaging.
 
 # How it works
 
@@ -11,7 +11,7 @@ A simple real-time chat application built with Next.js, .NET Core, and WebSocket
 # Features
 
 - Easy registration with username and password
-- Real-time chat with SignalR
+- Real-time chat with SignalR websockets
 - Persistent login sessions with cookies
 - Optional email notifications opt-in via SMTP
 - Upload and display a profile picture with input sanitization on both backend and frontend
